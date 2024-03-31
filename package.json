@@ -1,0 +1,14 @@
+{
+  "name": "leaflet.superbar",
+  "version": "0.1.0",
+  "description": "Leaflet layer controler bar",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Chihab Haddouche, Amr Hamadeh",
+  "license": "MIT",
+  "dependencies": {
+    "leaflet": "^1.9.4"
+  }
+}
