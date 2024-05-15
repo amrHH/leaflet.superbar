@@ -1,6 +1,9 @@
 L.SuperBar = L.Class.extend({
   initialize: function (options) {
     L.setOptions(this, options);
+    this._superBarVisible = true; // Initial state of super bar visibility
+    this._superBarElement = null;
+    this._superBarButton = null;
   },
 
   // Method to add button to map
@@ -10,28 +13,83 @@ L.SuperBar = L.Class.extend({
     // create button
     this._createButton();
 
+    // create and show super bar
+    this._openSuperBar();
+
     return this;
   },
 
   _createButton: function () {
-    var button = L.DomUtil.create("button", "leaflet-superbar-button");
-    button.innerHTML = "open";
-    L.DomEvent.on(button, "click", this._openSuperBar, this);
-    this._map.getContainer().appendChild(button);
+    this._superBarButton = L.DomUtil.create(
+      "button",
+      "leaflet-superbar-button"
+    );
+    this._superBarButton.innerHTML = "open";
+    L.DomEvent.on(this._superBarButton, "click", this._toggleSuperBar, this); // Change event handler to toggleSuperBar
+    this._map.getContainer().appendChild(this._superBarButton);
   },
 
-  // Methode to open the side bar
+  // Method to toggle super bar visibility
+  _toggleSuperBar: function () {
+    if (this._superBarVisible) {
+      // Close super bar if visible
+      this._closeSuperBar();
+    } else {
+      // Open super bar if not visible
+      this._superBarElement.classList.add("visible");
+      this._superBarButton.classList.remove("hidden");
+    }
+    this._superBarVisible = !this._superBarVisible; // Toggle visibility state
+  },
+
   _openSuperBar: function () {
     fetch("./src/view/superbar_content.html")
       .then((response) => response.text())
       .then((content) => {
-        var superBar = L.DomUtil.create("div", "leaflet-superbar");
-        superBar.innerHTML = content;
-        this._map.getContainer().appendChild(superBar);
+        // Parse the HTML content
+        const parser = new DOMParser();
+        const htmlDoc = parser.parseFromString(content, "text/html");
+
+        // Get the leaflet-superbar__body element
+        const superBarBody = htmlDoc.querySelector(".leaflet-superbar__body");
+
+        // Define a dictionary with test values
+        const testValues = {
+          value1: "Value 1",
+          value2: "Value 2",
+          value3: "Value 3",
+        };
+
+        // Loop through the dictionary and create a div for each value
+        for (const key in testValues) {
+          if (Object.hasOwnProperty.call(testValues, key)) {
+            const value = testValues[key];
+            const div = document.createElement("div");
+            div.textContent = value;
+            superBarBody.appendChild(div);
+          }
+        }
+
+        // Append the modified content to the map container
+        this._superBarElement = L.DomUtil.create(
+          "div",
+          "leaflet-superbar visible"
+        );
+        this._superBarElement.innerHTML = htmlDoc.body.innerHTML;
+        this._map.getContainer().appendChild(this._superBarElement);
+        this._superBarButton.classList.remove("hidden");
       })
       .catch((error) => {
-        console.error("Error of charging the content html :", error);
+        console.error("Error loading the content html:", error);
       });
+  },
+
+  // Method to close the side bar
+  _closeSuperBar: function () {
+    if (this._superBarElement) {
+      this._superBarElement.classList.remove("visible");
+      this._superBarButton.classList.add("hidden");
+    }
   },
 });
 
