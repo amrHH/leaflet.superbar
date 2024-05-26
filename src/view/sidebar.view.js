@@ -51,7 +51,9 @@ L.SuperBar = L.Class.extend({
         const htmlDoc = parser.parseFromString(content, "text/html");
 
         // Get the leaflet-superbar__body element
-        const superBarBody = htmlDoc.querySelector(".leaflet-superbar__body");
+        const superBarBody = htmlDoc.querySelector(
+          ".leaflet-superbar__body__layersList"
+        );
 
         // Define a dictionary with test values
         const testValues = {
@@ -64,7 +66,10 @@ L.SuperBar = L.Class.extend({
         for (const key in testValues) {
           if (Object.hasOwnProperty.call(testValues, key)) {
             const value = testValues[key];
-            const div = document.createElement("div");
+            const div = L.DomUtil.create(
+              "div",
+              "leaflet-superbar__body__layersList__layer"
+            );
             div.textContent = value;
             superBarBody.appendChild(div);
           }
@@ -78,6 +83,9 @@ L.SuperBar = L.Class.extend({
         this._superBarElement.innerHTML = htmlDoc.body.innerHTML;
         this._map.getContainer().appendChild(this._superBarElement);
         this._superBarButton.classList.remove("hidden");
+
+        // Prevent clicks on the superbar from affecting the map
+        this._preventMapEvents(this._superBarElement);
       })
       .catch((error) => {
         console.error("Error loading the content html:", error);
@@ -90,6 +98,13 @@ L.SuperBar = L.Class.extend({
       this._superBarElement.classList.remove("visible");
       this._superBarButton.classList.add("hidden");
     }
+  },
+
+  _preventMapEvents: function (element) {
+    const events = ["click", "mousedown", "touchstart", "dblclick"];
+    events.forEach((event) => {
+      L.DomEvent.on(element, event, L.DomEvent.stopPropagation);
+    });
   },
 });
 

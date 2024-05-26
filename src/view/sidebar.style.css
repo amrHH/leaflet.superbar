@@ -1,7 +1,7 @@
 .leaflet-superbar-button {
   position: absolute;
   top: 10px;
-  left: 221px;
+  left: 201px;
   background-color: #fff;
   padding: 5px 10px;
   border: 1px solid #ccc;
@@ -19,13 +19,25 @@
   left: -221px;
   bottom: 0px;
   width: 200px;
-  background-color: #46c23a;
-  padding: 10px;
+  background-color: white;
   border: 1px solid #ccc;
   z-index: 1000;
   transition: left 0.9s ease;
+  cursor: pointer;
+}
+.leaflet-superbar__header {
+  background-color: rgb(88, 196, 88);
+  padding: 5px;
 }
 
+.leaflet-superbar__body__layersList {
+  padding: 5px;
+}
+.leaflet-superbar__body__layersList__layer {
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.253);
+  }
+}
 .leaflet-superbar.visible {
   left: 0px;
 }
