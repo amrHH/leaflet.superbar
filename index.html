@@ -1,14 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leaflet Map</title>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-</head>
-<body>
-  <div id="map" style="height: 500px;"></div>
-  <script src="dist/superbar.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leaflet Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  </head>
+  <section class="addVectorLayer">
+    <form action="" method="POST" class="vector">
+      Click to add your vector layer. It support Json, Geojson, csv, gpx and kml
+      formats.
+      <input type="file" name="files" id="input_files" />
+    </form>
+  </section>
+  <div id="error_message"></div>
+  <body>
+    <div id="map" style="height: 500px"></div>
+    <script src="dist/superbar.js"></script>
+  </body>
 </html>
-
