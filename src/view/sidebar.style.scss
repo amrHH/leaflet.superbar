@@ -9,6 +9,9 @@
   cursor: pointer;
   z-index: 1000;
   transition: left 0.9s ease;
+  &.hidden {
+    left: 0px;
+  }
 }
 
 .leaflet-superbar {
@@ -24,23 +27,21 @@
   z-index: 1000;
   transition: left 0.9s ease;
   cursor: pointer;
-}
-.leaflet-superbar__header {
-  background-color: rgb(88, 196, 88);
-  padding: 5px;
-}
-
-.leaflet-superbar__body__layersList {
-  padding: 5px;
-}
-.leaflet-superbar__body__layersList__layer {
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.253);
+  &__header {
+    background-color: rgb(88, 196, 88);
+    padding: 5px;
   }
-}
-.leaflet-superbar.visible {
-  left: 0px;
-}
-.leaflet-superbar-button.hidden {
-  left: 0px;
+  &__body {
+    &__layerList {
+      padding: 5px;
+      &__layer {
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.253);
+        }
+      }
+    }
+  }
+  &.visible {
+    left: 0px;
+  }
 }

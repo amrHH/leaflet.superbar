@@ -1,5 +1,5 @@
 // Import necessary Leaflet types
-import "./sidebar.style.css";
+import "./sidebar.style.scss";
 import L from "leaflet";
 
 // Define the options interface
