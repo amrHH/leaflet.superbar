@@ -1,9 +1,12 @@
-// Import necessary Leaflet types
 import "./sidebar.style.scss";
 import L from "leaflet";
+import superbarContent from "./superbar_content.html";
+import { Layer } from "../model/Layer"; // Import Layer interface
 
-// Define the options interface
-interface SuperBarOptions extends L.ControlOptions {}
+// Define the options interface and include layers
+interface SuperBarOptions extends L.ControlOptions {
+  layers?: Layer[];
+}
 
 // Define the SuperBar class extending Leaflet's Class
 class SuperBar extends L.Class {
@@ -11,6 +14,7 @@ class SuperBar extends L.Class {
   private _superBarVisible: boolean;
   private _superBarElement: HTMLElement | null;
   private _superBarButton: HTMLButtonElement | null;
+  private _layers: Layer[];
 
   constructor(options: SuperBarOptions) {
     super();
@@ -18,6 +22,7 @@ class SuperBar extends L.Class {
     this._superBarVisible = true; // Initial state of super bar visibility
     this._superBarElement = null;
     this._superBarButton = null;
+    this._layers = options.layers || [];
   }
 
   // Method to add button to map
@@ -28,7 +33,7 @@ class SuperBar extends L.Class {
     this._createButton();
 
     // create and show super bar
-    this._openSuperBar();
+    this._fillSuperBar();
 
     return this;
   }
@@ -56,56 +61,43 @@ class SuperBar extends L.Class {
     this._superBarVisible = !this._superBarVisible; // Toggle visibility state
   }
 
-  private _openSuperBar(): void {
-    fetch("./src/view/superbar_content.html")
-      .then((response) => response.text())
-      .then((content) => {
-        // Parse the HTML content
-        const parser = new DOMParser();
-        const htmlDoc = parser.parseFromString(content, "text/html");
+  private _fillSuperBar(): void {
+    // Parse the HTML content
+    const parser = new DOMParser();
+    const htmlDoc = parser.parseFromString(superbarContent, "text/html");
 
-        // Get the leaflet-superbar__body element
-        const superBarBody = htmlDoc.querySelector(
-          ".leaflet-superbar__body__layersList"
-        );
+    // Get the leaflet-superbar__body element
+    const superBarBody = htmlDoc.querySelector(
+      ".leaflet-superbar__body__layersList"
+    );
 
-        if (superBarBody) {
-          // Define a dictionary with test values
-          const testValues: { [key: string]: string } = {
-            value1: "Value 1",
-            value2: "Value 2",
-            value3: "Value 3",
-          };
+    if (superBarBody) {
+      // Populate the super bar body with layers
+      this._populateSuperBar(superBarBody, this._layers);
 
-          // Loop through the dictionary and create a div for each value
-          for (const key in testValues) {
-            if (Object.hasOwnProperty.call(testValues, key)) {
-              const value = testValues[key];
-              const div = L.DomUtil.create(
-                "div",
-                "leaflet-superbar__body__layersList__layer"
-              );
-              div.textContent = value;
-              superBarBody.appendChild(div);
-            }
-          }
+      // Append the modified content to the map container
+      this._superBarElement = L.DomUtil.create(
+        "div",
+        "leaflet-superbar visible"
+      );
+      this._superBarElement!.innerHTML = htmlDoc.body.innerHTML;
+      this._map?.getContainer().appendChild(this._superBarElement);
+      this._superBarButton?.classList.remove("hidden");
 
-          // Append the modified content to the map container
-          this._superBarElement = L.DomUtil.create(
-            "div",
-            "leaflet-superbar visible"
-          );
-          this._superBarElement!.innerHTML = htmlDoc.body.innerHTML;
-          this._map?.getContainer().appendChild(this._superBarElement);
-          this._superBarButton?.classList.remove("hidden");
+      // Prevent clicks on the superbar from affecting the map
+      this._preventMapEvents(this._superBarElement!);
+    }
+  }
 
-          // Prevent clicks on the superbar from affecting the map
-          this._preventMapEvents(this._superBarElement!);
-        }
-      })
-      .catch((error) => {
-        console.error("Error loading the content html:", error);
-      });
+  private _populateSuperBar(container: Element, layers: Layer[]): void {
+    layers.forEach((layer) => {
+      const div = L.DomUtil.create(
+        "div",
+        "leaflet-superbar__body__layersList__layer"
+      );
+      div.textContent = layer.layerName;
+      container.appendChild(div);
+    });
   }
 
   // Method to close the side bar
