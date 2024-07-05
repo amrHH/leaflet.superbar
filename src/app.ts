@@ -1,6 +1,9 @@
 import { Layer } from "./model/Layer";
 import L from "leaflet";
 import LayerService from "./layer/LayerService";
+import { superBar } from "./view/sidebar.view";
+import { GeometryType } from "./enum/GeometryType";
+import { SourceType } from "./enum/SourceType";
 
 // Initializing map
 let map = L.map("map").setView([45.1885, 5.7245], 13);
@@ -28,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
           await LayerService.loadLayerFromFile(file);
           let layers = LayerService.getLayers();
+          const superBarControl = superBar({ layers }).addTo(map);
           displayLayers(layers);
         } catch (error) {
           fileErrorDiv.innerHTML = (error as Error).message;
@@ -46,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
       layer?.leafletLayer?.addTo(map);
     });
   };
-
   // Initialize import data functionality
   importDesktopData();
 });
