@@ -1,39 +1,52 @@
 import { Layer } from "./model/Layer";
 import L from "leaflet";
-import logSomething from "./layer/LayerManager";
+import LayerService from "./layer/LayerService";
 
-/**
- * List of layers.
- */
-const layers: Layer[] = [];
-
-/**
- * Import data from local.
- */
-const importData = (): void => {
-  // file = SelectFileFromLocal()
-  // const layer = Controller.parseData(file)
-  // controller.addLayer(layer)
-};
-
-/**
- * Display layers on sideBar.
- */
-const displayLayers = (layers: Layer[]): void => {
-  // For each layer in layers.
-  // Display layer on side bar.
-};
+// Initializing map
+let map = L.map("map").setView([45.1885, 5.7245], 13);
 
 // Wait for the DOM to be fully loaded
 document.addEventListener("DOMContentLoaded", () => {
-  let map = L.map("map").setView([51.505, -0.09], 13);
-
   L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   }).addTo(map);
+
+  // Get HTML elements
+  const inputFiles = document.getElementById("input_files") as HTMLInputElement;
+  const fileErrorDiv = document.getElementById(
+    "error_message"
+  ) as HTMLDivElement;
+
+  // Function to import data from local files
+  const importDesktopData = (): void => {
+    inputFiles.addEventListener("change", async (event: Event) => {
+      fileErrorDiv.innerHTML = "";
+      const target = event.target as HTMLInputElement;
+      if (target.files && target.files.length > 0) {
+        const file = target.files[0];
+        try {
+          await LayerService.loadLayerFromFile(file);
+          let layers = LayerService.getLayers();
+          displayLayers(layers);
+        } catch (error) {
+          fileErrorDiv.innerHTML = (error as Error).message;
+        }
+      }
+    });
+  };
+
+  /**
+   * Display layers on sideBar (not implemented) and map
+   * @param layers
+   */
+  const displayLayers = (layers: Layer[]): void => {
+    // For each layer in layers, display it on the side bar.
+    layers.forEach((layer) => {
+      layer?.leafletLayer?.addTo(map);
+    });
+  };
+
+  // Initialize import data functionality
+  importDesktopData();
 });
-
-logSomething("hello world");
-console.log("salut");
-
