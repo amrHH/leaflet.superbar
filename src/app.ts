@@ -46,10 +46,16 @@ document.addEventListener("DOMContentLoaded", () => {
    */
   const displayLayers = (layers: Layer[]): void => {
     // For each layer in layers, display it on the side bar.
+    console.log(layers);
     layers.forEach((layer) => {
-      layer?.leafletLayer?.addTo(map);
+      if (!layer.displayed) {
+        layer?.leafletLayer?.addTo(map);
+        sideBar.addLayerToSuperBar(layer);
+        layer.displayed = true;
+      }
     });
   };
+
   // Initialize import data functionality
   importDesktopData();
 });

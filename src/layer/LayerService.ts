@@ -1,4 +1,4 @@
-import L, { geoJSON } from "leaflet";
+import L from "leaflet";
 import { Layer } from "../model/Layer";
 import { SourceType } from "../enum/SourceType";
 
@@ -112,7 +112,8 @@ class LayerService {
               L.geoJSON(jsonRead),
               true,
               1,
-              true
+              true,
+              false
             );
             LayerService.incerementalId++;
             LayerService.addLayer(layer);
