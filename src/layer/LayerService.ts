@@ -18,8 +18,10 @@ class LayerService {
    * @param layer
    */
   static addLayer(layer: Layer): void {
-    // Add layer to the internal layers array
-    this.layers.push(layer);
+    if (!this.layers.find((e) => e.layerName === layer.layerName)) {
+      // Add layer to the internal layers array
+      this.layers.push(layer);
+    }
   }
 
   /**
