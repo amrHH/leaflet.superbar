@@ -14,6 +14,7 @@ export class Layer {
   active: boolean;
   range: number;
   visible: boolean;
+  displayed: boolean;
 
   constructor(
     layerName: string,
@@ -23,7 +24,8 @@ export class Layer {
     leafletLayer: L.Layer,
     active: boolean,
     range: number,
-    visible: boolean
+    visible: boolean,
+    displayed: boolean
   ) {
     this.layerName = layerName;
     this.layerId = layerId;
@@ -33,5 +35,6 @@ export class Layer {
     this.active = active;
     this.range = range;
     this.visible = visible;
+    this.displayed = displayed;
   }
 }
