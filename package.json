@@ -1,0 +1,33 @@
+{
+  "name": "leaflet.superbar",
+  "version": "0.1.0",
+  "description": "Leaflet layer controler bar",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "author": "Chihab Haddouche, Amr Hamadeh",
+  "license": "MIT",
+  "dependencies": {
+    "leaflet": "^1.9.4"
+  },
+  "directories": {
+    "doc": "doc"
+  },
+  "devDependencies": {
+    "@types/leaflet": "^1.9.12",
+    "css-loader": "^7.1.2",
+    "html-loader": "^5.0.0",
+    "sass": "^1.77.4",
+    "sass-loader": "^14.2.1",
+    "style-loader": "^4.0.0",
+    "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "keywords": []
+}
