@@ -3,60 +3,60 @@ import SideBar from "./SideBarComponent/SideBar";
 import LayerService from "./layer/LayerService";
 import { Layer } from "./model/Layer";
 
-// Initializing map
-let map = L.map("map").setView([45.1885, 5.7245], 13);
+export function initializeApp(map: L.Map) {
+  // Initializing sidebar
+  const sideBar = new SideBar(map, {});
+  sideBar.initSideBar();
 
-// Initializing sidebar
-const sideBar = new SideBar(map, {});
-sideBar.initSideBar();
+  // Wait for the DOM to be fully loaded
+  document.addEventListener("DOMContentLoaded", () => {
+    // Get HTML elements
+    const inputFiles = document.querySelector(
+      ".leaflet-superbar__body__input-files"
+    ) as HTMLInputElement;
+    const importButton = document.querySelector(
+      ".leaflet-superbar__body__import-button"
+    ) as HTMLButtonElement;
 
-// Wait for the DOM to be fully loaded
-document.addEventListener("DOMContentLoaded", () => {
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  }).addTo(map);
+    // Show file input when the button is clicked
+    importButton.addEventListener("click", () => {
+      inputFiles.click();
+    });
 
-  // Get HTML elements
-  const inputFiles = document.getElementById("input_files") as HTMLInputElement;
-  const fileErrorDiv = document.getElementById(
-    "error_message"
-  ) as HTMLDivElement;
-
-  // Function to import data from local files
-  const importDesktopData = (): void => {
-    inputFiles.addEventListener("change", async (event: Event) => {
-      fileErrorDiv.innerHTML = "";
-      const target = event.target as HTMLInputElement;
-      if (target.files && target.files.length > 0) {
-        const file = target.files[0];
-        try {
-          await LayerService.loadLayerFromFile(file);
-          let layers = LayerService.getLayers();
-          displayLayers(layers);
-        } catch (error) {
-          fileErrorDiv.innerHTML = (error as Error).message;
+    // Function to import data from local files
+    const importDesktopData = (): void => {
+      inputFiles.addEventListener("change", async (event: Event) => {
+        const target = event.target as HTMLInputElement;
+        if (target.files && target.files.length > 0) {
+          const file = target.files[0];
+          try {
+            await LayerService.loadLayerFromFile(file);
+            let layers = LayerService.getLayers();
+            displayLayers(layers);
+          } catch (error) {
+            console.error((error as Error).message);
+          }
         }
-      }
-    });
-  };
+      });
+    };
 
-  /**
-   * Display layers on sideBar (not implemented) and map
-   * @param layers
-   */
-  const displayLayers = (layers: Layer[]): void => {
-    // For each layer in layers, display it on the side bar.
-    console.log(layers);
-    layers.forEach((layer) => {
-      if (!layer.displayed) {
-        layer?.leafletLayer?.addTo(map);
-        sideBar.addLayerToSuperBar(layer);
-        layer.displayed = true;
-      }
-    });
-  };
+    /**
+     * Display layers on sideBar (not implemented) and map
+     * @param layers
+     */
+    const displayLayers = (layers: Layer[]): void => {
+      // For each layer in layers, display it on the side bar.
+      console.log(layers);
+      layers.forEach((layer) => {
+        if (!layer.displayed) {
+          layer?.leafletLayer?.addTo(map);
+          sideBar.addLayerToSuperBar(layer);
+          layer.displayed = true;
+        }
+      });
+    };
 
-  // Initialize import data functionality
-  importDesktopData();
-});
+    // Initialize import data functionality
+    importDesktopData();
+  });
+}
