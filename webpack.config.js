@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/app.ts",
+  entry: "./src/index.ts",
   devtool: "source-map",
   module: {
     rules: [
@@ -26,6 +26,10 @@ module.exports = {
   output: {
     filename: "superbar.js",
     path: path.resolve(__dirname, "dist"),
-    sourceMapFilename: "[file].map", // Explicitly specify source map file name
+    library: {
+      name: "SuperBar",
+      type: "umd",
+    },
+    globalObject: "this",
   },
 };
