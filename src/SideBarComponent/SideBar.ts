@@ -1,7 +1,10 @@
+// src/SideBar/SideBar.ts
 import L from "leaflet";
 import { Layer } from "../model/Layer";
 import "./SideBarStyle.scss";
 import superbarContent from "./superbar_content.html";
+import ColorPickerButton from "./ColorPickerButton/ColorPickerButton";
+import LayerService from "../layer/LayerService";
 
 // Define the options interface and include layers
 interface SuperBarOptions extends L.ControlOptions {
@@ -18,7 +21,6 @@ class SideBar extends L.Class {
 
   constructor(map: L.Map, options: SuperBarOptions) {
     super();
-    L.setOptions(this, options);
     this.map = map;
     this.superBarVisible = true;
     this.superBarElement = null;
@@ -97,6 +99,17 @@ class SideBar extends L.Class {
           "leaflet-superbar__body__layersList__layer"
         );
         div.textContent = layer.layerName;
+
+        // Create and add the color picker button
+        const colorPickerButton = new ColorPickerButton(layer.layerId);
+        colorPickerButton
+          .getElement()
+          .addEventListener(
+            "input",
+            LayerService.handleColorChange.bind(LayerService)
+          );
+        div.appendChild(colorPickerButton.getElement());
+
         superBarBody.appendChild(div);
       }
     }

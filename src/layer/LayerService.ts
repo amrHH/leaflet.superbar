@@ -1,6 +1,7 @@
 import L from "leaflet";
 import { Layer } from "../model/Layer";
 import { SourceType } from "../enum/SourceType";
+import { GeometryType } from "../enum/GeometryType";
 
 class LayerService {
   private static incerementalId = 0;
@@ -103,13 +104,41 @@ class LayerService {
             const readingResult = fileReader.result as string;
             const jsonRead = JSON.parse(readingResult);
 
+            const geometryType =
+              jsonRead.features[0].geometry.type.toLowerCase();
+            let geomType: GeometryType;
+            switch (geometryType) {
+              case "point":
+                geomType = GeometryType.POINT;
+                break;
+              case "linestring":
+                geomType = GeometryType.POLYLINE;
+                break;
+              case "polygon":
+                geomType = GeometryType.POLYGONE;
+                break;
+              default:
+                geomType = GeometryType.NONE;
+            }
+
             // Creating new layer.
             layer = new Layer(
               jsonRead.name,
               LayerService.incerementalId.toString(),
-              jsonRead.features[0].geometry.type,
+              geomType,
               SourceType.LOCAL,
-              L.geoJSON(jsonRead),
+              L.geoJSON(jsonRead, {
+                pointToLayer: (feature, latlng) => {
+                  return L.circleMarker(latlng, {
+                    radius: 8,
+                    fillColor: "#3388ff",
+                    color: "#000",
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8,
+                  });
+                },
+              }),
               true,
               1,
               true,
@@ -138,6 +167,24 @@ class LayerService {
       }
     });
   }
-}
 
+  /**
+   * Handle color change for a specific layer.
+   */
+  static handleColorChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const colorPickerId = input.id;
+    const layer = this.layers.find((layer) => layer.layerId === colorPickerId);
+    if (layer) {
+      if (layer.geom === GeometryType.POINT) {
+        layer.leafletLayer.setStyle({
+          fillColor: input.value,
+          color: input.value,
+        });
+      } else {
+        layer.leafletLayer.setStyle({ color: input.value });
+      }
+    }
+  }
+}
 export default LayerService;
