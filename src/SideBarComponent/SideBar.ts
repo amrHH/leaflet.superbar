@@ -5,6 +5,7 @@ import "./SideBarStyle.scss";
 import superbarContent from "./superbar_content.html";
 import ColorPickerButton from "./ColorPickerButton/ColorPickerButton";
 import LayerService from "../layer/LayerService";
+import GeometryTypeLabel from "./GeometryTypeLabel/GeometryTypeLabel";
 
 // Define the options interface and include layers
 interface SuperBarOptions extends L.ControlOptions {
@@ -99,6 +100,9 @@ class SideBar extends L.Class {
           "leaflet-superbar__body__layersList__layer"
         );
         div.textContent = layer.layerName;
+        console.log(
+          `Layer added: ${layer.layerName}, Geometry type: ${layer.geom}`
+        );
 
         // Create and add the color picker button
         const colorPickerButton = new ColorPickerButton(layer.layerId);
@@ -109,6 +113,10 @@ class SideBar extends L.Class {
             LayerService.handleColorChange.bind(LayerService)
           );
         div.appendChild(colorPickerButton.getElement());
+
+        // Create and add the geometry type label
+        const geometryTypeLabel = new GeometryTypeLabel(layer.geom as string);
+        div.appendChild(geometryTypeLabel.getElement());
 
         superBarBody.appendChild(div);
       }

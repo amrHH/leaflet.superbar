@@ -106,8 +106,8 @@ class LayerService {
 
             const geometryType =
               jsonRead.features[0].geometry.type.toLowerCase();
-            let geomType: GeometryType;
-            switch (geometryType) {
+            let geomType = geometryType;
+            /*             switch (geometryType) {
               case "point":
                 geomType = GeometryType.POINT;
                 break;
@@ -119,7 +119,7 @@ class LayerService {
                 break;
               default:
                 geomType = GeometryType.NONE;
-            }
+            } */
 
             // Creating new layer.
             layer = new Layer(
