@@ -36,24 +36,29 @@ class SideBar extends L.Class {
       "button",
       "leaflet-superbar-button"
     ) as HTMLButtonElement;
-    this.superBarButton.innerHTML = "open";
+
+    // Crée un élément span pour le texte afin de l'isoler pour la rotation
+    const buttonText = document.createElement("span");
+    buttonText.innerHTML = "+"; // Vous pouvez changer l'icône ici
+    this.superBarButton.appendChild(buttonText);
+
     L.DomEvent.on(this.superBarButton, "click", this.toggleSuperBar, this); // Change event handler to toggleSuperBar
     this.map?.getContainer().appendChild(this.superBarButton);
   }
 
   /**
-   * Add or remove classes on elements to apply css propertie.
+   * Toggle the superbar visibility and rotate the button.
    */
   private toggleSuperBar(): void {
     if (this.superBarVisible) {
-      // Close super bar if visible
       this.closeSuperBar();
+      this.superBarButton!.classList.remove("rotated");
     } else {
-      // Open super bar if not visible
       this.superBarElement?.classList.add("visible");
       this.superBarButton?.classList.remove("hidden");
+      this.superBarButton!.classList.add("rotated");
     }
-    this.superBarVisible = !this.superBarVisible; // Toggle visibility state
+    this.superBarVisible = !this.superBarVisible;
   }
 
   /**
