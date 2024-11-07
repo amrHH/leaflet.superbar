@@ -100,14 +100,22 @@ class SideBar extends L.Class {
       );
 
       if (superBarBody) {
-        const div = L.DomUtil.create(
+        const layerContainer = L.DomUtil.create(
           "div",
           "leaflet-superbar__body__layersList__layer"
         );
-        div.textContent = layer.layerName;
-        console.log(
-          `Layer added: ${layer.layerName}, Geometry type: ${layer.geom}`
+
+        const firstLineDiv = L.DomUtil.create(
+          "div",
+          "leaflet-superbar__body__layersList__layer__firstLine"
         );
+
+        const layerNameDiv = L.DomUtil.create(
+          "div",
+          "leaflet-superbar__body__layersList__layer__firstLine__layer-name"
+        );
+        layerNameDiv.textContent = layer.layerName;
+        firstLineDiv.appendChild(layerNameDiv);
 
         // Create and add the color picker button
         const colorPickerButton = new ColorPickerButton(layer.layerId);
@@ -117,13 +125,26 @@ class SideBar extends L.Class {
             "input",
             LayerService.handleColorChange.bind(LayerService)
           );
-        div.appendChild(colorPickerButton.getElement());
+        firstLineDiv.appendChild(colorPickerButton.getElement());
+
+        layerContainer.appendChild(firstLineDiv);
+
+        const secondLineDiv = L.DomUtil.create(
+          "div",
+          "leaflet-superbar__body__layersList__layer__secondLine"
+        );
 
         // Create and add the geometry type label
         const geometryTypeLabel = new GeometryTypeLabel(layer.geom as string);
-        div.appendChild(geometryTypeLabel.getElement());
+        secondLineDiv.appendChild(geometryTypeLabel.getElement());
 
-        superBarBody.appendChild(div);
+        layerContainer.appendChild(secondLineDiv);
+
+        superBarBody.appendChild(layerContainer);
+
+        console.log(
+          `Layer added: ${layer.layerName}, Geometry type: ${layer.geom}`
+        );
       }
     }
   }
