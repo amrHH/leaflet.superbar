@@ -37,13 +37,25 @@ class SideBar extends L.Class {
       "leaflet-superbar-button"
     ) as HTMLButtonElement;
 
-    // Crée un élément span pour le texte afin de l'isoler pour la rotation
     const buttonText = document.createElement("span");
-    buttonText.innerHTML = "+"; // Vous pouvez changer l'icône ici
+    buttonText.innerHTML = "+";
     this.superBarButton.appendChild(buttonText);
 
-    L.DomEvent.on(this.superBarButton, "click", this.toggleSuperBar, this); // Change event handler to toggleSuperBar
+    L.DomEvent.on(this.superBarButton, "click", this.toggleSuperBar, this);
     this.map?.getContainer().appendChild(this.superBarButton);
+
+    // Add listeners to disable and enable map interactions based on cursor position over the button
+    this.superBarButton.addEventListener("mouseover", () => {
+      this.map.dragging.disable();
+      this.map.scrollWheelZoom.disable();
+      this.map.doubleClickZoom.disable();
+    });
+
+    this.superBarButton.addEventListener("mouseout", () => {
+      this.map.dragging.enable();
+      this.map.scrollWheelZoom.enable();
+      this.map.doubleClickZoom.enable();
+    });
   }
 
   /**
@@ -88,6 +100,19 @@ class SideBar extends L.Class {
     this.superBarElement!.innerHTML = this.htmlDoc.body.innerHTML;
     this.map?.getContainer().appendChild(this.superBarElement);
     this.superBarButton?.classList.remove("hidden");
+
+    // Add listeners to disable and enable map interactions based on cursor position
+    this.superBarElement.addEventListener("mouseover", () => {
+      this.map.dragging.disable();
+      this.map.scrollWheelZoom.disable();
+      this.map.doubleClickZoom.disable();
+    });
+
+    this.superBarElement.addEventListener("mouseout", () => {
+      this.map.dragging.enable();
+      this.map.scrollWheelZoom.enable();
+      this.map.doubleClickZoom.enable();
+    });
   }
 
   /**
