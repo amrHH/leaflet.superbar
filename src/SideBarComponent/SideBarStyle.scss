@@ -48,9 +48,16 @@
   transition: left 0.5s linear;
   cursor: pointer;
   &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     background-color: $HEAD_COLOR;
     padding: 5px;
     @include toolbar_header-box;
+    &-logo {
+      width: 80px;
+      height: 80px;
+    }
   }
   &__body {
     &__toolbar {
