@@ -101,6 +101,45 @@ class SideBar extends L.Class {
     this.map?.getContainer().appendChild(this.superBarElement);
     this.superBarButton?.classList.remove("hidden");
 
+    // Add the dynamic header elements
+    const headerElement = this.superBarElement.querySelector(
+      ".leaflet-superbar__header"
+    );
+    if (headerElement) {
+      // Create and append the logo
+      const logo = L.DomUtil.create(
+        "img",
+        "leaflet-superbar__header-logo"
+      ) as HTMLImageElement;
+      logo.src = "src/assets/logo/superbar_logo.png";
+      logo.alt = "Logo";
+      headerElement.appendChild(logo);
+
+      // Create and append the header title
+      const headerTitle = L.DomUtil.create(
+        "div",
+        "leaflet-superbar__header-title"
+      );
+      headerTitle.textContent = "Superbar";
+      headerElement.appendChild(headerTitle);
+    }
+
+    // Add the toolbar with import button
+    const toolbarElement = this.superBarElement.querySelector(
+      ".leaflet-superbar__body__toolbar"
+    );
+    if (toolbarElement) {
+      const importButtonContainer = L.DomUtil.create(
+        "div",
+        "leaflet-superbar__body__tooldbar__import-button"
+      );
+      // Create the icon
+      const importIcon = L.DomUtil.create("img", "Icon") as HTMLImageElement;
+      importIcon.src = "src/assets/icons/add_layer.svg";
+      importButtonContainer.appendChild(importIcon);
+      toolbarElement.appendChild(importButtonContainer);
+    }
+
     // Add listeners to disable and enable map interactions based on cursor position
     this.superBarElement.addEventListener("mouseover", () => {
       this.map.dragging.disable();

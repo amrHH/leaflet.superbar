@@ -46,7 +46,7 @@
   border: 1px solid #ccc;
   z-index: 1000;
   transition: left 0.5s linear;
-  cursor: pointer;
+  cursor: auto;
   &__header {
     display: flex;
     flex-direction: row;
@@ -55,8 +55,13 @@
     padding: 5px;
     @include toolbar_header-box;
     &-logo {
-      width: 80px;
-      height: 80px;
+      width: $HEAD_LOGO_WIDHT;
+      height: $HEAD_LOGO_HEIGHT;
+    }
+    &-title {
+      font-size: $HEAD_TITLE_FONT_SIZE;
+      font-family: $HEAD_TITLE_FONT_FAMILY;
+      color: $HEAD_TITLE_COLOR;
     }
   }
   &__body {
@@ -65,20 +70,24 @@
       padding: 10px;
       display: flex;
       @include toolbar_header-box;
-      &__import-button .Icon {
-        filter: red;
+      :hover {
+        cursor: pointer;
       }
     }
     &__layersList {
       padding: 5px;
       &__layer {
+        :hover {
+          cursor: pointer;
+        }
         &__firstLine {
           display: flex;
           justify-content: space-between;
           align-items: center;
           &__layer-name {
             color: $LAYERS_NAME_COLOR;
-            font-size: 15px;
+            font-size: $LAYERS_NAME_FONT_SIZE;
+            font-family: $LAYERS_NAME_FONT_FAMILY;
           }
         }
         &__secondLine {
@@ -98,4 +107,8 @@
   &.visible {
     left: 0px;
   }
+}
+.leaflet-superbar__body__tooldbar__import-button .Icon {
+  width: $TOOLBAR_IMPORT_BUTTON_WIDTH;
+  height: $TOOLBAR_IMPORT_BUTTON_HEIGHT;
 }
