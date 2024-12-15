@@ -15,8 +15,8 @@ export function initializeApp(map: L.Map) {
       ".leaflet-superbar__body__input-files"
     ) as HTMLInputElement;
     const importButton = document.querySelector(
-      ".leaflet-superbar__body__import-button"
-    ) as HTMLButtonElement;
+      ".leaflet-superbar__body__tooldbar__import-button"
+    ) as HTMLDivElement;
 
     // Show file input when the button is clicked
     importButton.addEventListener("click", () => {
