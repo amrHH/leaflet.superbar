@@ -37,13 +37,25 @@ class SideBar extends L.Class {
       "leaflet-superbar-button"
     ) as HTMLButtonElement;
 
-    // Crée un élément span pour le texte afin de l'isoler pour la rotation
     const buttonText = document.createElement("span");
-    buttonText.innerHTML = "+"; // Vous pouvez changer l'icône ici
+    buttonText.innerHTML = "+";
     this.superBarButton.appendChild(buttonText);
 
-    L.DomEvent.on(this.superBarButton, "click", this.toggleSuperBar, this); // Change event handler to toggleSuperBar
+    L.DomEvent.on(this.superBarButton, "click", this.toggleSuperBar, this);
     this.map?.getContainer().appendChild(this.superBarButton);
+
+    // Add listeners to disable and enable map interactions based on cursor position over the button
+    this.superBarButton.addEventListener("mouseover", () => {
+      this.map.dragging.disable();
+      this.map.scrollWheelZoom.disable();
+      this.map.doubleClickZoom.disable();
+    });
+
+    this.superBarButton.addEventListener("mouseout", () => {
+      this.map.dragging.enable();
+      this.map.scrollWheelZoom.enable();
+      this.map.doubleClickZoom.enable();
+    });
   }
 
   /**
@@ -88,6 +100,58 @@ class SideBar extends L.Class {
     this.superBarElement!.innerHTML = this.htmlDoc.body.innerHTML;
     this.map?.getContainer().appendChild(this.superBarElement);
     this.superBarButton?.classList.remove("hidden");
+
+    // Add the dynamic header elements
+    const headerElement = this.superBarElement.querySelector(
+      ".leaflet-superbar__header"
+    );
+    if (headerElement) {
+      // Create and append the logo
+      const logo = L.DomUtil.create(
+        "img",
+        "leaflet-superbar__header-logo"
+      ) as HTMLImageElement;
+      logo.src = "src/assets/logo/superbar_logo.png";
+      logo.alt = "Logo";
+      headerElement.appendChild(logo);
+
+      // Create and append the header title
+      const headerTitle = L.DomUtil.create(
+        "div",
+        "leaflet-superbar__header-title"
+      );
+      headerTitle.textContent = "Superbar";
+      headerElement.appendChild(headerTitle);
+    }
+
+    // Add the toolbar with import button
+    const toolbarElement = this.superBarElement.querySelector(
+      ".leaflet-superbar__body__toolbar"
+    );
+    if (toolbarElement) {
+      const importButtonContainer = L.DomUtil.create(
+        "div",
+        "leaflet-superbar__body__tooldbar__import-button"
+      );
+      // Create the icon
+      const importIcon = L.DomUtil.create("img", "Icon") as HTMLImageElement;
+      importIcon.src = "src/assets/icons/add_layer.svg";
+      importButtonContainer.appendChild(importIcon);
+      toolbarElement.appendChild(importButtonContainer);
+    }
+
+    // Add listeners to disable and enable map interactions based on cursor position
+    this.superBarElement.addEventListener("mouseover", () => {
+      this.map.dragging.disable();
+      this.map.scrollWheelZoom.disable();
+      this.map.doubleClickZoom.disable();
+    });
+
+    this.superBarElement.addEventListener("mouseout", () => {
+      this.map.dragging.enable();
+      this.map.scrollWheelZoom.enable();
+      this.map.doubleClickZoom.enable();
+    });
   }
 
   /**
@@ -100,14 +164,22 @@ class SideBar extends L.Class {
       );
 
       if (superBarBody) {
-        const div = L.DomUtil.create(
+        const layerContainer = L.DomUtil.create(
           "div",
           "leaflet-superbar__body__layersList__layer"
         );
-        div.textContent = layer.layerName;
-        console.log(
-          `Layer added: ${layer.layerName}, Geometry type: ${layer.geom}`
+
+        const firstLineDiv = L.DomUtil.create(
+          "div",
+          "leaflet-superbar__body__layersList__layer__firstLine"
         );
+
+        const layerNameDiv = L.DomUtil.create(
+          "div",
+          "leaflet-superbar__body__layersList__layer__firstLine__layer-name"
+        );
+        layerNameDiv.textContent = layer.layerName;
+        firstLineDiv.appendChild(layerNameDiv);
 
         // Create and add the color picker button
         const colorPickerButton = new ColorPickerButton(layer.layerId);
@@ -117,13 +189,26 @@ class SideBar extends L.Class {
             "input",
             LayerService.handleColorChange.bind(LayerService)
           );
-        div.appendChild(colorPickerButton.getElement());
+        firstLineDiv.appendChild(colorPickerButton.getElement());
+
+        layerContainer.appendChild(firstLineDiv);
+
+        const secondLineDiv = L.DomUtil.create(
+          "div",
+          "leaflet-superbar__body__layersList__layer__secondLine"
+        );
 
         // Create and add the geometry type label
         const geometryTypeLabel = new GeometryTypeLabel(layer.geom as string);
-        div.appendChild(geometryTypeLabel.getElement());
+        secondLineDiv.appendChild(geometryTypeLabel.getElement());
 
-        superBarBody.appendChild(div);
+        layerContainer.appendChild(secondLineDiv);
+
+        superBarBody.appendChild(layerContainer);
+
+        console.log(
+          `Layer added: ${layer.layerName}, Geometry type: ${layer.geom}`
+        );
       }
     }
   }
