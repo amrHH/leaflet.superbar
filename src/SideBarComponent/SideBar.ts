@@ -1,4 +1,5 @@
 // src/SideBar/SideBar.ts
+<<<<<<< Updated upstream
 import L from "leaflet";
 import { Layer } from "../model/Layer";
 import "./SideBarStyle.scss";
@@ -6,6 +7,15 @@ import superbarContent from "./superbar_content.html";
 import ColorPickerButton from "./ColorPickerButton/ColorPickerButton";
 import LayerService from "../layer/LayerService";
 import GeometryTypeLabel from "./GeometryTypeLabel/GeometryTypeLabel";
+=======
+import L from 'leaflet';
+import { Layer } from '../model/Layer';
+import './SideBarStyle.scss';
+import superbarContent from './superbar_content.html';
+import ColorPickerButton from './ColorPickerButton/ColorPickerButton';
+import LayerService from '../layer/LayerService';
+import { LayerComponent } from './LayerComponent/LayerComponent';
+>>>>>>> Stashed changes
 
 // Define the options interface and include layers
 interface SuperBarOptions extends L.ControlOptions {
@@ -18,7 +28,7 @@ class SideBar extends L.Class {
   private superBarElement: HTMLElement | null;
   private superBarButton: HTMLButtonElement | null;
   private parser = new DOMParser();
-  private htmlDoc = this.parser.parseFromString(superbarContent, "text/html");
+  private htmlDoc = this.parser.parseFromString(superbarContent, 'text/html');
 
   constructor(map: L.Map, options: SuperBarOptions) {
     super();
@@ -33,15 +43,20 @@ class SideBar extends L.Class {
    */
   private createButton(): void {
     this.superBarButton = L.DomUtil.create(
-      "button",
-      "leaflet-superbar-button"
+      'button',
+      'leaflet-superbar-button'
     ) as HTMLButtonElement;
+<<<<<<< Updated upstream
 
     const buttonText = document.createElement("span");
     buttonText.innerHTML = "+";
     this.superBarButton.appendChild(buttonText);
 
     L.DomEvent.on(this.superBarButton, "click", this.toggleSuperBar, this);
+=======
+    this.superBarButton.innerHTML = 'open';
+    L.DomEvent.on(this.superBarButton, 'click', this.toggleSuperBar, this); // Change event handler to toggleSuperBar
+>>>>>>> Stashed changes
     this.map?.getContainer().appendChild(this.superBarButton);
 
     // Add listeners to disable and enable map interactions based on cursor position over the button
@@ -78,8 +93,8 @@ class SideBar extends L.Class {
    */
   private closeSuperBar(): void {
     if (this.superBarElement) {
-      this.superBarElement.classList.remove("visible");
-      this.superBarButton?.classList.add("hidden");
+      this.superBarElement.classList.remove('visible');
+      this.superBarButton?.classList.add('hidden');
     }
   }
 
@@ -91,14 +106,13 @@ class SideBar extends L.Class {
     this.createButton();
 
     // Get the leaflet-superbar__body element
-    const superBarBody = this.htmlDoc.querySelector(
-      ".leaflet-superbar__body__layersList"
-    );
+    const superBarBody = this.htmlDoc.querySelector('.leaflet-superbar__body__layersList');
 
     // Append the modified content to the map container
-    this.superBarElement = L.DomUtil.create("div", "leaflet-superbar visible");
+    this.superBarElement = L.DomUtil.create('div', 'leaflet-superbar visible');
     this.superBarElement!.innerHTML = this.htmlDoc.body.innerHTML;
     this.map?.getContainer().appendChild(this.superBarElement);
+<<<<<<< Updated upstream
     this.superBarButton?.classList.remove("hidden");
 
     // Add the dynamic header elements
@@ -152,6 +166,9 @@ class SideBar extends L.Class {
       this.map.scrollWheelZoom.enable();
       this.map.doubleClickZoom.enable();
     });
+=======
+    this.superBarButton?.classList.remove('hidden');
+>>>>>>> Stashed changes
   }
 
   /**
@@ -160,10 +177,11 @@ class SideBar extends L.Class {
   public addLayerToSuperBar(layer: Layer) {
     if (this.superBarElement) {
       const superBarBody = this.superBarElement.querySelector(
-        ".leaflet-superbar__body__layersList"
+        '.leaflet-superbar__body__layersList'
       );
 
       if (superBarBody) {
+<<<<<<< Updated upstream
         const layerContainer = L.DomUtil.create(
           "div",
           "leaflet-superbar__body__layersList__layer"
@@ -209,6 +227,10 @@ class SideBar extends L.Class {
         console.log(
           `Layer added: ${layer.layerName}, Geometry type: ${layer.geom}`
         );
+=======
+        let layerComponent = new LayerComponent(layer, this.map);
+        superBarBody.appendChild(layerComponent.element);
+>>>>>>> Stashed changes
       }
     }
   }
