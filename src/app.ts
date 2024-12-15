@@ -1,7 +1,7 @@
-import L from "leaflet";
-import SideBar from "./SideBarComponent/SideBar";
-import LayerService from "./layer/LayerService";
-import { Layer } from "./model/Layer";
+import L from 'leaflet';
+import SideBar from './SideBarComponent/SideBar';
+import LayerService from './layer/LayerService';
+import { Layer } from './model/Layer';
 
 export function initializeApp(map: L.Map) {
   // Initializing sidebar
@@ -9,23 +9,23 @@ export function initializeApp(map: L.Map) {
   sideBar.initSideBar();
 
   // Wait for the DOM to be fully loaded
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener('DOMContentLoaded', () => {
     // Get HTML elements
     const inputFiles = document.querySelector(
-      ".leaflet-superbar__body__input-files"
+      '.leaflet-superbar__body__input-files'
     ) as HTMLInputElement;
     const importButton = document.querySelector(
-      ".leaflet-superbar__body__tooldbar__import-button"
+      '.leaflet-superbar__body__tooldbar__import-button'
     ) as HTMLDivElement;
 
     // Show file input when the button is clicked
-    importButton.addEventListener("click", () => {
+    importButton.addEventListener('click', () => {
       inputFiles.click();
     });
 
     // Function to import data from local files
     const importDesktopData = (): void => {
-      inputFiles.addEventListener("change", async (event: Event) => {
+      inputFiles.addEventListener('change', async (event: Event) => {
         const target = event.target as HTMLInputElement;
         if (target.files && target.files.length > 0) {
           const file = target.files[0];
@@ -55,6 +55,16 @@ export function initializeApp(map: L.Map) {
         }
       });
     };
+
+    const updateLayers = (): void => {
+      let layers = LayerService.getLayers();
+      displayLayers(layers);
+    };
+
+    // Listen for custom events to update layers
+    LayerService.on('layer-added', updateLayers);
+    LayerService.on('layer-removed', updateLayers);
+    LayerService.on('layer-updated', updateLayers);
 
     // Initialize import data functionality
     importDesktopData();

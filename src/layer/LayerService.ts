@@ -1,7 +1,7 @@
-import L from "leaflet";
-import { Layer } from "../model/Layer";
-import { SourceType } from "../enum/SourceType";
-import { GeometryType } from "../enum/GeometryType";
+import L from 'leaflet';
+import { Layer } from '../model/Layer';
+import { SourceType } from '../enum/SourceType';
+import { GeometryType } from '../enum/GeometryType';
 
 class LayerService {
   private static incerementalId = 0;
@@ -95,7 +95,7 @@ class LayerService {
     // Readfile function is async
     return new Promise((resolve, reject) => {
       // Check file type.
-      if (file.name.endsWith(".geojson")) {
+      if (file.name.endsWith('.geojson')) {
         const fileReader = new FileReader();
         // Init layer.
         let layer: Layer | null = null;
@@ -104,17 +104,16 @@ class LayerService {
             const readingResult = fileReader.result as string;
             const jsonRead = JSON.parse(readingResult);
 
-            const geometryType =
-              jsonRead.features[0].geometry.type.toLowerCase();
+            const geometryType = jsonRead.features[0].geometry.type.toLowerCase();
             let geomType = geometryType;
             /*             switch (geometryType) {
               case "point":
                 geomType = GeometryType.POINT;
                 break;
-              case "linestring":
+              case 'linestring':
                 geomType = GeometryType.POLYLINE;
                 break;
-              case "polygon":
+              case 'polygon':
                 geomType = GeometryType.POLYGONE;
                 break;
               default:
@@ -131,8 +130,8 @@ class LayerService {
                 pointToLayer: (feature, latlng) => {
                   return L.circleMarker(latlng, {
                     radius: 8,
-                    fillColor: "#3388ff",
-                    color: "#000",
+                    fillColor: '#3388ff',
+                    color: '#000',
                     weight: 1,
                     opacity: 1,
                     fillOpacity: 0.8,
@@ -150,22 +149,31 @@ class LayerService {
             // Return created layer.
             resolve(layer);
           } catch (error) {
-            console.error("Error parsing JSON or creating layer:", error);
+            console.error('Error parsing JSON or creating layer:', error);
             reject(null);
           }
         };
         // Handle file reader error.
         fileReader.onerror = function (error) {
-          console.error("Error reading file:", error);
+          console.error('Error reading file:', error);
           reject(null);
         };
 
         // Read file as text.
         fileReader.readAsText(file);
       } else {
-        reject(new Error("File is not a GeoJSON file"));
+        reject(new Error('File is not a GeoJSON file'));
       }
     });
+  }
+
+  public static on(event: string, callback: () => void) {
+    document.addEventListener(event, callback);
+  }
+
+  private static emit(event: string) {
+    const eventToEmit = new Event(event);
+    document.dispatchEvent(eventToEmit);
   }
 
   /**

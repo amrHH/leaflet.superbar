@@ -11,7 +11,8 @@
   "author": "Chihab Haddouche, Amr Hamadeh",
   "license": "MIT",
   "dependencies": {
-    "leaflet": "^1.9.4"
+    "leaflet": "^1.9.4",
+    "leaflet.superbar": "file:"
   },
   "directories": {
     "doc": "doc"
