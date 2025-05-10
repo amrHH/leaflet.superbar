@@ -2,25 +2,45 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <title>Leaflet Map Example</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leaflet Map</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      crossorigin=""
+    />
+
+    <style>
+      #map {
+        height: 100vh;
+        width: 100%;
+      }
+    </style>
   </head>
-
   <body>
-    <div id="map" style="height: 500px"></div>
-    <script src="dist/superbar.js"></script>
+    <div id="map"></div>
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      crossorigin=""
+    ></script>
+    <script src="https://unpkg.com/leaflet.superbar@latest/dist/superbar.js"></script>
     <script>
-      // Create the map
-      const map = L.map("map").setView([45.1885, 5.7245], 13);
-
-      // Add a tile layer to the map
+      const map = L.map("map").setView([48.8566, 2.3522], 13);
+      const customStyles = {
+        HEAD_COLOR: "#1abc9c",
+        HEAD_TITLE: "My Custom Map",
+        HEAD_TITLE_COLOR: "#ffffff",
+        HEAD_LOGO_WIDTH: "80px",
+        HEAD_LOGO_HEIGHT: "80px",
+        TOOLBAR_COLOR: "#16a085",
+        TOGGLE_BUTTON_COLOR: "#27ae60",
+        LAYERS_NAME_COLOR: "#34495e",
+        LAYERS_GEOMETRY_COLOR: "#e67e22",
+      };
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        attribution: "© OpenStreetMap contributors",
       }).addTo(map);
-
-      // Initialize the SuperBar plugin with the map
+      SuperBar.applyStyles(customStyles);
       SuperBar.initializeApp(map);
     </script>
   </body>

@@ -1,5 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96" fill="none" viewBox="0 0 96 96" id="add">
-  <rect width="63" height="63" stroke="currentColor" stroke-width="5" rx="9" transform="matrix(-1 0 0 1 86 24)"></rect>
-  <path stroke="currentColor" stroke-width="5" d="M72 23L72 19C72 14.0294 67.9706 10 63 10L18 10C13.0294 9.99999 9 14.0294 9 19L9 64C8.99999 68.9706 13.0294 73 18 73L23 73"></path>
-  <path stroke="currentColor" stroke-linecap="round" stroke-width="5" d="M43 55L65 55M54 44L54 67"></path>
-</svg>
