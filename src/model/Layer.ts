@@ -1,6 +1,6 @@
-import { GeometryType } from "../enum/GeometryType";
-import { SourceType } from "../enum/SourceType";
-import L from "leaflet"; // Importation de Leaflet
+import { GeometryType } from '../enum/GeometryType';
+import { SourceType } from '../enum/SourceType';
+import L from 'leaflet';
 
 /**
  * Layer object.
@@ -8,9 +8,9 @@ import L from "leaflet"; // Importation de Leaflet
 export class Layer {
   layerName: string;
   layerId: string;
-  geometryType: GeometryType;
+  geom: GeometryType;
   source: SourceType;
-  leafletLayer: L.Layer;
+  leafletLayer: L.GeoJSON;
   active: boolean;
   range: number;
   visible: boolean;
@@ -19,9 +19,9 @@ export class Layer {
   constructor(
     layerName: string,
     layerId: string,
-    geometryType: GeometryType,
+    geom: GeometryType,
     source: SourceType,
-    leafletLayer: L.Layer,
+    leafletLayer: L.GeoJSON,
     active: boolean,
     range: number,
     visible: boolean,
@@ -29,7 +29,7 @@ export class Layer {
   ) {
     this.layerName = layerName;
     this.layerId = layerId;
-    this.geometryType = geometryType;
+    this.geom = geom;
     this.source = source;
     this.leafletLayer = leafletLayer;
     this.active = active;

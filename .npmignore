@@ -1,0 +1,10 @@
+src/
+tests/
+node_modules/
+*.log
+*.map
+webpack.config.js
+tsconfig.json
+.vscode/
+.env
+.gitignore

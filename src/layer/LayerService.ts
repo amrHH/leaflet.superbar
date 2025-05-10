@@ -1,6 +1,7 @@
-import L from "leaflet";
-import { Layer } from "../model/Layer";
-import { SourceType } from "../enum/SourceType";
+import L from 'leaflet';
+import { Layer } from '../model/Layer';
+import { SourceType } from '../enum/SourceType';
+import { GeometryType } from '../enum/GeometryType';
 
 class LayerService {
   private static incerementalId = 0;
@@ -18,7 +19,7 @@ class LayerService {
    * @param layer
    */
   static addLayer(layer: Layer): void {
-    if (!this.layers.find((e) => e.layerName === layer.layerName)) {
+    if (!this.layers.find((e) => e.layerId === layer.layerId)) {
       // Add layer to the internal layers array
       this.layers.push(layer);
     }
@@ -30,11 +31,9 @@ class LayerService {
    * @param map
    */
   static deleteLayer(layer: Layer, map: L.Map): void {
-    const index = this.layers.indexOf(layer);
-    if (index !== -1) {
-      this.layers.splice(index, 1);
-      map.removeLayer(layer.leafletLayer);
-    }
+    this.layers = this.layers.filter((l) => l.layerId !== layer.layerId);
+    map.removeLayer(layer.leafletLayer);
+    layer.displayed = false;
   }
 
   /**
@@ -53,6 +52,7 @@ class LayerService {
   static hideLayer(layer: Layer, map: L.Map): void {
     // Hide the layer from the map
     layer.visible = false;
+    map.removeLayer(layer.leafletLayer);
   }
 
   /**
@@ -94,7 +94,7 @@ class LayerService {
     // Readfile function is async
     return new Promise((resolve, reject) => {
       // Check file type.
-      if (file.name.endsWith(".geojson")) {
+      if (file.name.endsWith('.geojson')) {
         const fileReader = new FileReader();
         // Init layer.
         let layer: Layer | null = null;
@@ -103,13 +103,40 @@ class LayerService {
             const readingResult = fileReader.result as string;
             const jsonRead = JSON.parse(readingResult);
 
+            const geometryType = jsonRead.features[0].geometry.type.toLowerCase();
+            let geomType = geometryType;
+            /*             switch (geometryType) {
+              case "point":
+                geomType = GeometryType.POINT;
+                break;
+              case 'linestring':
+                geomType = GeometryType.POLYLINE;
+                break;
+              case 'polygon':
+                geomType = GeometryType.POLYGONE;
+                break;
+              default:
+                geomType = GeometryType.NONE;
+            } */
+
             // Creating new layer.
             layer = new Layer(
               jsonRead.name,
               LayerService.incerementalId.toString(),
-              jsonRead.features[0].geometry.type,
+              geomType,
               SourceType.LOCAL,
-              L.geoJSON(jsonRead),
+              L.geoJSON(jsonRead, {
+                pointToLayer: (feature, latlng) => {
+                  return L.circleMarker(latlng, {
+                    radius: 8,
+                    fillColor: '#3388ff',
+                    color: '#000',
+                    weight: 1,
+                    opacity: 1,
+                    fillOpacity: 0.8,
+                  });
+                },
+              }),
               true,
               1,
               true,
@@ -121,23 +148,50 @@ class LayerService {
             // Return created layer.
             resolve(layer);
           } catch (error) {
-            console.error("Error parsing JSON or creating layer:", error);
+            console.error('Error parsing JSON or creating layer:', error);
             reject(null);
           }
         };
         // Handle file reader error.
         fileReader.onerror = function (error) {
-          console.error("Error reading file:", error);
+          console.error('Error reading file:', error);
           reject(null);
         };
 
         // Read file as text.
         fileReader.readAsText(file);
       } else {
-        reject(new Error("File is not a GeoJSON file"));
+        reject(new Error('File is not a GeoJSON file'));
       }
     });
   }
-}
 
+  public static on(event: string, callback: () => void) {
+    document.addEventListener(event, callback);
+  }
+
+  private static emit(event: string) {
+    const eventToEmit = new Event(event);
+    document.dispatchEvent(eventToEmit);
+  }
+
+  /**
+   * Handle color change for a specific layer.
+   */
+  static handleColorChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const colorPickerId = input.id;
+    const layer = this.layers.find((layer) => layer.layerId === colorPickerId);
+    if (layer) {
+      if (layer.geom === GeometryType.POINT) {
+        layer.leafletLayer.setStyle({
+          fillColor: input.value,
+          color: input.value,
+        });
+      } else {
+        layer.leafletLayer.setStyle({ color: input.value });
+      }
+    }
+  }
+}
 export default LayerService;
