@@ -1,6 +1,6 @@
-import { GeometryType } from "../enum/GeometryType";
-import { SourceType } from "../enum/SourceType";
-import L from "leaflet"; // Importation de Leaflet
+import { GeometryType } from '../enum/GeometryType';
+import { SourceType } from '../enum/SourceType';
+import L from 'leaflet';
 
 /**
  * Layer object.

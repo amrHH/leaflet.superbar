@@ -1,4 +1,3 @@
-// src/SideBar/SideBar.ts
 import L from 'leaflet';
 import { Layer } from '../model/Layer';
 import './SideBarStyle.scss';
@@ -6,10 +5,17 @@ import superbarContent from './superbar_content.html';
 import ColorPickerButton from './ColorPickerButton/ColorPickerButton';
 import LayerService from '../layer/LayerService';
 import GeometryTypeLabel from './GeometryTypeLabel/GeometryTypeLabel';
+import LayerVisibilityToggle from './LayerVisibilityToggle/LayerVisibilityToggle';
+import LayerDeleteButton from './LayerDeleteButton/LayerDeleteButton';
+import SuperBar_Logo from '../assets/logo/superbar_logo.png';
+import addLayer_Logo from '../assets/icons/Add_Layers.png';
+import { customLogoUrl } from '../app';
 
 // Define the options interface and include layers
 interface SuperBarOptions extends L.ControlOptions {
   layers?: Layer[];
+  customLogoUrl?: string | null;
+  customHeaderTitle?: string;
 }
 
 class SideBar extends L.Class {
@@ -19,6 +25,8 @@ class SideBar extends L.Class {
   private superBarButton: HTMLButtonElement | null;
   private parser = new DOMParser();
   private htmlDoc = this.parser.parseFromString(superbarContent, 'text/html');
+  customLogoUrl: string | null;
+  customHeaderTitle: string;
 
   constructor(map: L.Map, options: SuperBarOptions) {
     super();
@@ -26,6 +34,8 @@ class SideBar extends L.Class {
     this.superBarVisible = true;
     this.superBarElement = null;
     this.superBarButton = null;
+    this.customLogoUrl = options.customLogoUrl ?? null;
+    this.customHeaderTitle = options.customHeaderTitle ?? 'Superbar';
   }
 
   /**
@@ -87,10 +97,7 @@ class SideBar extends L.Class {
    * Init the sidebar and add it to map.
    */
   public initSideBar() {
-    // create button
     this.createButton();
-
-    // Get the leaflet-superbar__body element
     const superBarBody = this.htmlDoc.querySelector('.leaflet-superbar__body__layersList');
 
     // Append the modified content to the map container
@@ -104,13 +111,13 @@ class SideBar extends L.Class {
     if (headerElement) {
       // Create and append the logo
       const logo = L.DomUtil.create('img', 'leaflet-superbar__header-logo') as HTMLImageElement;
-      logo.src = 'src/assets/logo/superbar_logo.png';
+      logo.src = this.customLogoUrl ?? SuperBar_Logo;
       logo.alt = 'Logo';
       headerElement.appendChild(logo);
 
       // Create and append the header title
       const headerTitle = L.DomUtil.create('div', 'leaflet-superbar__header-title');
-      headerTitle.textContent = 'Superbar';
+      headerTitle.textContent = this.customHeaderTitle;
       headerElement.appendChild(headerTitle);
     }
 
@@ -123,7 +130,7 @@ class SideBar extends L.Class {
       );
       // Create the icon
       const importIcon = L.DomUtil.create('img', 'Icon') as HTMLImageElement;
-      importIcon.src = 'src/assets/icons/add_layer.svg';
+      importIcon.src = addLayer_Logo;
       importButtonContainer.appendChild(importIcon);
       toolbarElement.appendChild(importButtonContainer);
     }
@@ -153,11 +160,16 @@ class SideBar extends L.Class {
 
       if (superBarBody) {
         const layerContainer = L.DomUtil.create('div', 'leaflet-superbar__body__layersList__layer');
+        layerContainer.id = `layer-${layer.layerId}`;
 
         const firstLineDiv = L.DomUtil.create(
           'div',
           'leaflet-superbar__body__layersList__layer__firstLine'
         );
+
+        // Create and add the visibility toggle checkbox
+        const visibilityToggle = new LayerVisibilityToggle(layer, this.map);
+        firstLineDiv.appendChild(visibilityToggle.getElement());
 
         const layerNameDiv = L.DomUtil.create(
           'div',
@@ -173,6 +185,10 @@ class SideBar extends L.Class {
           .addEventListener('input', LayerService.handleColorChange.bind(LayerService));
         firstLineDiv.appendChild(colorPickerButton.getElement());
 
+        // Create and add the delete button
+        const deleteButton = new LayerDeleteButton(layer, this.map);
+        firstLineDiv.appendChild(deleteButton.getElement());
+
         layerContainer.appendChild(firstLineDiv);
 
         const secondLineDiv = L.DomUtil.create(
@@ -187,8 +203,6 @@ class SideBar extends L.Class {
         layerContainer.appendChild(secondLineDiv);
 
         superBarBody.appendChild(layerContainer);
-
-        console.log(`Layer added: ${layer.layerName}, Geometry type: ${layer.geom}`);
       }
     }
   }

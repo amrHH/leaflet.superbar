@@ -10,7 +10,7 @@ export class LayerComponent {
 
   constructor(layer: Layer, lmap: Map) {
     this.layer = layer;
-    this.lmap = lmap; // Ajout de la carte (lmap) comme propriété de la classe
+    this.lmap = lmap;
     this.element = this.createLayerElement(layer);
   }
 
@@ -27,7 +27,7 @@ export class LayerComponent {
     // Delete button
     const deleteButton = document.createElement('button');
     deleteButton.textContent = 'Supprimer';
-    deleteButton.addEventListener('click', () => LayerService.deleteLayer(layer, this.lmap)); // Utilisation de this.lmap pour accéder à la carte
+    deleteButton.addEventListener('click', () => LayerService.deleteLayer(layer, this.lmap));
     div.appendChild(deleteButton);
 
     // Create and add the color picker button
@@ -37,6 +37,6 @@ export class LayerComponent {
       .addEventListener('input', LayerService.handleColorChange.bind(LayerService));
     div.appendChild(colorPickerButton.getElement());
 
-    return div; // Retourne l'élément div créé
+    return div;
   };
 }

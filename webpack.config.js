@@ -1,35 +1,39 @@
-const path = require("path");
+const path = require('path');
 
 module.exports = {
-  entry: "./src/index.ts",
-  devtool: "source-map",
+  entry: './src/index.ts',
+  devtool: 'source-map',
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        use: 'ts-loader',
         exclude: /node_modules/,
       },
       {
         test: /\.scss$/,
-        use: ["style-loader", "css-loader", "sass-loader"],
+        use: ['style-loader', 'css-loader', 'sass-loader'],
       },
       {
         test: /\.html$/,
-        use: ["html-loader"],
+        use: ['html-loader'],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)$/i,
+        type: 'asset/resource',
       },
     ],
   },
   resolve: {
-    extensions: [".tsx", ".ts", ".js"],
+    extensions: ['.tsx', '.ts', '.js'],
   },
   output: {
-    filename: "superbar.js",
-    path: path.resolve(__dirname, "dist"),
+    filename: 'superbar.js',
+    path: path.resolve(__dirname, 'dist'),
     library: {
-      name: "SuperBar",
-      type: "umd",
+      name: 'SuperBar',
+      type: 'umd',
     },
-    globalObject: "this",
+    globalObject: 'this',
   },
 };

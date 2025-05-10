@@ -19,7 +19,7 @@ class LayerService {
    * @param layer
    */
   static addLayer(layer: Layer): void {
-    if (!this.layers.find((e) => e.layerName === layer.layerName)) {
+    if (!this.layers.find((e) => e.layerId === layer.layerId)) {
       // Add layer to the internal layers array
       this.layers.push(layer);
     }
@@ -31,11 +31,9 @@ class LayerService {
    * @param map
    */
   static deleteLayer(layer: Layer, map: L.Map): void {
-    const index = this.layers.indexOf(layer);
-    if (index !== -1) {
-      this.layers.splice(index, 1);
-      map.removeLayer(layer.leafletLayer);
-    }
+    this.layers = this.layers.filter((l) => l.layerId !== layer.layerId);
+    map.removeLayer(layer.leafletLayer);
+    layer.displayed = false;
   }
 
   /**
@@ -54,6 +52,7 @@ class LayerService {
   static hideLayer(layer: Layer, map: L.Map): void {
     // Hide the layer from the map
     layer.visible = false;
+    map.removeLayer(layer.leafletLayer);
   }
 
   /**

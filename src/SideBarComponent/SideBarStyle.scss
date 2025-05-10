@@ -1,11 +1,10 @@
-@import "../assets/styles/variables";
-@import "../assets/styles/mixins";
+@import '../assets/styles/mixins';
 .leaflet-superbar-button {
   position: absolute;
   top: 50%;
   left: 25px;
   transform: translateY(-50%);
-  background-color: $TOGGLE_BUTTON_COLOR;
+  background-color: var(--toggle-button-color);
   font-size: 26px;
   padding: 10px;
   width: 221px;
@@ -22,7 +21,7 @@
   span {
     display: inline-block;
     transition: transform 0.6s ease;
-    color: $TOGGLE_TEXT_COLOR;
+    color: var(--toggle-text-color);
   }
 
   &.hidden {
@@ -42,7 +41,7 @@
   left: -221px;
   bottom: 0px;
   width: 200px;
-  background-color: $BODY_COLOR;
+  background-color: var(--body-color);
   border: 1px solid #ccc;
   z-index: 1000;
   transition: left 0.5s linear;
@@ -51,22 +50,22 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    background-color: $HEAD_COLOR;
+    background-color: var(--head-color);
     padding: 5px;
     @include toolbar_header-box;
     &-logo {
-      width: $HEAD_LOGO_WIDHT;
-      height: $HEAD_LOGO_HEIGHT;
+      width: var(--head-logo-width);
+      height: var(--head-logo-height);
     }
     &-title {
-      font-size: $HEAD_TITLE_FONT_SIZE;
-      font-family: $HEAD_TITLE_FONT_FAMILY;
-      color: $HEAD_TITLE_COLOR;
+      font-size: var(--head-title-font-size);
+      font-family: var(--head-title-font-family);
+      color: var(--head-title-color);
     }
   }
   &__body {
     &__toolbar {
-      background-color: $TOOLBAR_COLOR;
+      background-color: var(--toolbar-color);
       padding: 10px;
       display: flex;
       @include toolbar_header-box;
@@ -85,9 +84,10 @@
           justify-content: space-between;
           align-items: center;
           &__layer-name {
-            color: $LAYERS_NAME_COLOR;
-            font-size: $LAYERS_NAME_FONT_SIZE;
-            font-family: $LAYERS_NAME_FONT_FAMILY;
+            margin-right: 65px;
+            color: var(--layers-name-color);
+            font-size: var(--layers-name-font-size);
+            font-family: var(--layers-name-font-family);
           }
         }
         &__secondLine {
@@ -95,7 +95,7 @@
             font-size: 10px;
             font-style: italic;
             padding-left: 10px;
-            color: $LAYERS_GEOMETRY_COLOR;
+            color: var(--layers-geometry-color);
           }
         }
         &:hover {
@@ -109,6 +109,6 @@
   }
 }
 .leaflet-superbar__body__tooldbar__import-button .Icon {
-  width: $TOOLBAR_IMPORT_BUTTON_WIDTH;
-  height: $TOOLBAR_IMPORT_BUTTON_HEIGHT;
+  width: var(--toolbar-import-button-width);
+  height: var(--toolbar-import-button-height);
 }

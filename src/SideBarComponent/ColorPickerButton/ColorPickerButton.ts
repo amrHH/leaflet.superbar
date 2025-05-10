@@ -1,6 +1,6 @@
-import L from "leaflet";
-import "./ColorPickerButton.scss";
-import { ColorPicker } from "../../model/ColorPicker";
+import L from 'leaflet';
+import './ColorPickerButton.scss';
+import { ColorPicker } from '../../model/ColorPicker';
 
 class ColorPickerButton implements ColorPicker {
   public id: string;
@@ -8,13 +8,10 @@ class ColorPickerButton implements ColorPicker {
 
   constructor(id: string) {
     this.id = id;
-    this.element = L.DomUtil.create(
-      "input",
-      "color-picker"
-    ) as HTMLInputElement;
-    this.element.type = "color";
+    this.element = L.DomUtil.create('input', 'color-picker') as HTMLInputElement;
+    this.element.type = 'color';
     this.element.id = id;
-    this.element.value = "#3388ff";
+    this.element.value = '#3388ff';
   }
 
   public getElement(): HTMLInputElement {
