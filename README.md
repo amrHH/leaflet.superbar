@@ -21,6 +21,10 @@
 
 Leaflet 1.0.0 and plus
 
+## Demo
+
+You can view a demo [here](https://amrhh.github.io/leaflet.superbar/).
+
 ## Installation
 
 ```bash
