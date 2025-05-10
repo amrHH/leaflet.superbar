@@ -10,6 +10,9 @@
   },
   "author": "Chihab Haddouche, Amr Hamadeh",
   "license": "MIT",
+  "peerDependencies": {
+    "leaflet": "^1.9.4"
+  },
   "dependencies": {
     "leaflet": "^1.9.4",
     "leaflet.superbar": "file:"
